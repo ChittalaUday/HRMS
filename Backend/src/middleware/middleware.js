@@ -16,10 +16,11 @@ module.exports = (app) => {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(helmet());
+  app.use(morgan("dev"));
   app.use(morgan("short", { stream: logStream }));
   app.use(
     cors({
-      origin: process.env.CORS_ORIGIN,
+      origin: "*",
       methods: ["GET", "POST", "PUT", "DELETE"],
     })
   );

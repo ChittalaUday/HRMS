@@ -1,21 +1,28 @@
-const { Pool } = require("pg");
+const { Pool, Client } = require("pg");
 
-const pool = new Pool({
-  user: "postgres",
-  host: "localhost",
-  database: "Niruthi",
-  password: "Uday-015",
-  port: 5432,
-});
+const dbInfo = require("./db");
+const pool = new Pool(dbInfo);
 
-const connectPostgreSQL = async () => {
-  try {
-    const res = await pool.query("SELECT NOW()");
-    console.log("PostgreSQL DB is Connected:", res.rows[0]);
-  } catch (err) {
-    console.error("PostgreSQL DB Connection error", err.stack);
-    process.exit(1); // Exit process with failure
-  }
+const connectPostgreSQL = () => {
+  const client = new Client(dbInfo);
+  client
+    .connect()
+    .then(() => {
+      console.log("#####---> Postgres DB Connected!");
+
+      // Optionally, you can run a simple query to check if the connection is valid:
+      return client.query("SELECT NOW()");
+    })
+    .then((res) => {
+      console.log("Postgres Time: ", res.rows[0]);
+
+      // Close the connection
+      return client.end();
+    })
+    .catch((err) => {
+      console.error("Error *****: " + err);
+      process.exit(1);
+    });
 };
 
 module.exports = {

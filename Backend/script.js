@@ -1,8 +1,7 @@
 const express = require("express");
 const applyMiddleware = require("./src/middleware/middleware");
-const connectMongoDB = require("./src/config/mongodb");
-const { connectPostgreSQL, pool } = require("./src/config/postgresql");
-const routes = require("./src/routes");
+const { connectPostgreSQL } = require("./src/config/postgresql");
+const routes = require("./src/routes/routes");
 require("dotenv").config();
 
 const app = express();
@@ -12,7 +11,6 @@ port = process.env.PORT || 5000;
 applyMiddleware(app);
 
 // --- Database Connections ---
-connectMongoDB();
 connectPostgreSQL();
 
 app.use("/api", routes);
